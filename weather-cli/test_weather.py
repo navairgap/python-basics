@@ -1,0 +1,52 @@
+import json
+import unittest
+from unittest.mock import patch
+
+import weather
+
+
+SAMPLE = {
+    "current_condition": [{
+        "temp_C": "28", "FeelsLikeC": "31", "humidity": "62",
+        "windspeedKmph": "14",
+        "weatherDesc": [{"value": "Haze"}],
+        "lang_en": [{"value": "Haze"}],
+    }],
+    "nearest_area": [{
+        "areaName": [{"value": "Pune"}],
+        "region": [{"value": "Maharashtra"}],
+    }],
+}
+
+
+class TestWeather(unittest.TestCase):
+    def test_summarise(self):
+        info = weather.summarise(SAMPLE)
+        self.assertEqual(info["place"], "Pune, Maharashtra")
+        self.assertEqual(info["temp_c"], "28")
+        self.assertEqual(info["desc"], "Haze")
+
+    def test_render_text(self):
+        info = weather.summarise(SAMPLE)
+        with patch("builtins.print") as p:
+            weather.render(info)
+        out = "\n".join(c.args[0] for c in p.call_args_list)
+        self.assertIn("28°C", out)
+        self.assertIn("Pune", out)
+
+    def test_render_json(self):
+        info = weather.summarise(SAMPLE)
+        with patch("builtins.print") as p:
+            weather.render(info, as_json=True)
+        parsed = json.loads(p.call_args.args[0])
+        self.assertEqual(parsed["humidity"], "62")
+
+    def test_network_error_raises(self):
+        from urllib.error import URLError
+        with patch.object(weather.urllib.request, "urlopen", side_effect=URLError("down")):
+            with self.assertRaises(URLError):
+                weather.fetch("pune")
+
+
+if __name__ == "__main__":
+    unittest.main()
