@@ -70,7 +70,11 @@ def main():
         for pwd in generate(a.length, not a.no_lower, not a.no_upper,
                             not a.no_digits, not a.no_symbols, a.count,
                             a.no_ambiguous):
-            print(pwd)
+            if a.show_strength:
+                s = strength(pwd, a.no_ambiguous)
+                print(f"{pwd}   # {s['bits']} bits, {s['rating']}")
+            else:
+                print(pwd)
     except ValueError as e:
         ap.error(str(e))
 
