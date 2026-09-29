@@ -29,6 +29,19 @@ class TestGenerate(unittest.TestCase):
             generate(length=2)
 
 
+class TestStrength(unittest.TestCase):
+    def test_long_beats_short(self):
+        from passgen import strength
+        short = strength("abc123")
+        long_ = strength("aB3!xY9#qW2!eR5$")
+        self.assertGreater(long_["bits"], short["bits"])
+        self.assertIn(long_["rating"], ("strong", "excellent"))
+
+    def test_empty_is_zero(self):
+        from passgen import strength
+        self.assertEqual(strength(""), {"bits": 0.0, "rating": "weak"})
+
+
 if __name__ == "__main__":
     unittest.main()
 
@@ -44,6 +57,19 @@ class TestNoAmbiguous(unittest.TestCase):
             pwd = generate(length=40, lower=False, upper=False, digits=True,
                            symbols=False, no_ambiguous=True)[0]
             self.assertNotIn("0", pwd)
+
+
+class TestStrength(unittest.TestCase):
+    def test_long_beats_short(self):
+        from passgen import strength
+        short = strength("abc123")
+        long_ = strength("aB3!xY9#qW2!eR5$")
+        self.assertGreater(long_["bits"], short["bits"])
+        self.assertIn(long_["rating"], ("strong", "excellent"))
+
+    def test_empty_is_zero(self):
+        from passgen import strength
+        self.assertEqual(strength(""), {"bits": 0.0, "rating": "weak"})
 
 
 if __name__ == "__main__":

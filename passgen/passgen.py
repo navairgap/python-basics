@@ -44,6 +44,19 @@ def generate(length=16, lower=True, upper=True, digits=True, symbols=True, count
     return out
 
 
+def strength(password, no_ambiguous=False):
+    """rough entropy estimate in bits + a word rating."""
+    import math
+    pools = 0
+    for chars, amb in ((string.ascii_lowercase, 1), (string.ascii_uppercase, 1),
+                       (string.digits, 1), (SETS["symbols"], 0)):
+        if set(password) & set(chars):
+            pools += len("".join(c for c in chars if c not in AMBIGUOUS)) if (no_ambiguous and not amb) else len(chars) if amb or not no_ambiguous else len(chars)
+    bits = len(password) * math.log2(pools) if pools else 0
+    rating = "weak" if bits < 45 else "ok" if bits < 70 else "strong" if bits < 100 else "excellent"
+    return {"bits": round(bits, 1), "rating": rating}
+
+
 def main():
     ap = argparse.ArgumentParser(description="generate passwords")
     ap.add_argument("-l", "--length", type=int, default=16)
