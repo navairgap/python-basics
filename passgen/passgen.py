@@ -13,7 +13,11 @@ SETS = {
 }
 
 
-def generate(length=16, lower=True, upper=True, digits=True, symbols=True, count=1):
+AMBIGUOUS = set("l1IO0")
+
+
+def generate(length=16, lower=True, upper=True, digits=True, symbols=True, count=1,
+             no_ambiguous=False):
     pools = [chars for chars, on in (
         (SETS["lower"], lower), (SETS["upper"], upper),
         (SETS["digits"], digits), (SETS["symbols"], symbols),
@@ -24,6 +28,12 @@ def generate(length=16, lower=True, upper=True, digits=True, symbols=True, count
         raise ValueError(f"length {length} too short for {len(pools)} character sets")
 
     alphabet = "".join(pools)
+    if no_ambiguous:
+        pools = ["".join(c for c in pool if c not in AMBIGUOUS) for pool in pools]
+        pools = [pool for pool in pools if pool]
+        if not pools:
+            raise ValueError("no characters left after removing ambiguous ones")
+        alphabet = "".join(pools)
     rng = secrets.SystemRandom()
     out = []
     for _ in range(count):
@@ -45,7 +55,8 @@ def main():
     a = ap.parse_args()
     try:
         for pwd in generate(a.length, not a.no_lower, not a.no_upper,
-                            not a.no_digits, not a.no_symbols, a.count):
+                            not a.no_digits, not a.no_symbols, a.count,
+                            a.no_ambiguous):
             print(pwd)
     except ValueError as e:
         ap.error(str(e))

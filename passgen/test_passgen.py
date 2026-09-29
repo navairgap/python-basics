@@ -31,3 +31,20 @@ class TestGenerate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestNoAmbiguous(unittest.TestCase):
+    def test_lookalikes_removed(self):
+        from passgen import AMBIGUOUS
+        pwd = generate(length=48, no_ambiguous=True)[0]
+        self.assertFalse(set(pwd) & AMBIGUOUS)
+
+    def test_digits_pool_excludes_zero(self):
+        for _ in range(20):
+            pwd = generate(length=40, lower=False, upper=False, digits=True,
+                           symbols=False, no_ambiguous=True)[0]
+            self.assertNotIn("0", pwd)
+
+
+if __name__ == "__main__":
+    unittest.main()
