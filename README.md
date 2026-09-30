@@ -17,3 +17,6 @@ that rot. learning in public.
 - every project has tests (`python3 -m unittest discover -s .`) and they pass
 - every project has a readme that fits in one screen
 - small is the point. boring is a feature.
+
+---
+maintained · verified 2026-09-30
