@@ -24,3 +24,7 @@ maintained · verified 2026-09-30
 maintained · verified 2026-10-01
 ---
 maintained · verified 2026-10-02
+
+## Why stdlib only
+
+Every project here runs on a fresh Python install with zero pip installs. It's a constraint on purpose: when you can't reach for a dependency, you learn what the standard library already does well — `secrets`, `json`, `urllib`, `argparse`.
