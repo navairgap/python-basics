@@ -40,6 +40,13 @@ class TestTodo(unittest.TestCase):
         self.assertEqual(data[0]["task"], "persist me")
         self.assertIn("created", data[0])
 
+    def test_stats(self):
+        todo.add("a")
+        todo.add("b")
+        todo.done(1)
+        total, done = todo.stats()
+        self.assertEqual((total, done), (2, 1))
+
     def test_rm_out_of_range(self):
         with self.assertRaises(IndexError):
             todo.rm(7)

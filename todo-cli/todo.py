@@ -44,6 +44,12 @@ def done(n, value=True):
     save(items)
 
 
+def stats():
+    items = load()
+    done = sum(1 for it in items if it["done"])
+    return len(items), done
+
+
 def rm(n):
     items = load()
     removed = items.pop(n - 1)
@@ -60,6 +66,7 @@ def main():
     p_ls.add_argument("-a", "--all", action="store_true")
     for name in ("done", "undone", "rm"):
         sub.add_parser(name).add_argument("n", type=int)
+    sub.add_parser("stats")
     a = ap.parse_args()
 
     if a.cmd == "add":
@@ -68,6 +75,9 @@ def main():
         ls(a.all)
     elif a.cmd in ("done", "undone"):
         done(a.n, a.cmd == "done")
+    elif a.cmd == "stats":
+        total, done = stats()
+        print(f"{done}/{total} done")
     elif a.cmd == "rm":
         try:
             print(f"removed: {rm(a.n)}")
