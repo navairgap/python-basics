@@ -56,3 +56,12 @@ def audit(root, exclude=(), min_size=0, _depth=0):
     if _depth > 0 and total >= min_size:
         stats.append(DirStat(root, total, count))
     return stats, total, count
+
+def render_bars(rows, width=40):
+    if not rows:
+        return []
+    mx = max(r.size for r in rows)
+    return [
+        f"{format_size(r.size):>8}  {'█' * max(1, int(r.size / mx * width))}  {r.path}"
+        for r in rows
+    ]
