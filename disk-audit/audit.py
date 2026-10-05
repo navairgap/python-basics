@@ -65,3 +65,16 @@ def render_bars(rows, width=40):
         f"{format_size(r.size):>8}  {'█' * max(1, int(r.size / mx * width))}  {r.path}"
         for r in rows
     ]
+
+def main():
+    ap = argparse.ArgumentParser(prog="disk-audit", description="find what's eating your disk")
+    ap.add_argument("path", nargs="?", default=".")
+    ap.add_argument("-n", "--top", type=int, default=15, help="show top N directories")
+    a = ap.parse_args()
+
+    _, total, count = audit(a.path)
+    print(f"scanned {count} files · total {format_size(total)}")
+
+
+if __name__ == "__main__":
+    main()
