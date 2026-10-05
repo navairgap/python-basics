@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 
-from audit import audit
+from audit import DirStat, audit, format_size, parse_size, render_bars
 
 
 class TestAudit(unittest.TestCase):
@@ -46,3 +46,20 @@ class TestAudit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestFormat(unittest.TestCase):
+    def test_format_size(self):
+        self.assertEqual(format_size(512), "512B")
+        self.assertEqual(format_size(2048), "2.0K")
+        self.assertEqual(format_size(5 * 1024 ** 3), "5.0G")
+
+    def test_parse_size(self):
+        self.assertEqual(parse_size("100M"), 100 * 1024 ** 2)
+        self.assertEqual(parse_size("2g"), 2 * 1024 ** 3)
+        self.assertEqual(parse_size("512"), 512)
+
+    def test_render_bars(self):
+        rows = [DirStat("/a", 100, 1), DirStat("/b", 50, 1)]
+        lines = render_bars(rows, width=10)
+        self.assertEqual(len(lines), 2)
+        self.assertIn("/a", lines[0])
