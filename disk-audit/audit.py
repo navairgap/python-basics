@@ -72,8 +72,12 @@ def main():
     ap.add_argument("-n", "--top", type=int, default=15, help="show top N directories")
     a = ap.parse_args()
 
-    _, total, count = audit(a.path)
-    print(f"scanned {count} files · total {format_size(total)}")
+    stats, total, count = audit(a.path)
+    stats.sort(key=lambda s: s.size, reverse=True)
+    rows = stats[: a.top]
+    print(f"scanned {count} files · total {format_size(total)}\n")
+    for line in render_bars(rows):
+        print(line)
 
 
 if __name__ == "__main__":
