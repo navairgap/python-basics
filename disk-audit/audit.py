@@ -27,3 +27,26 @@ def parse_size(s):
     if s[-1:] in mult:
         return int(float(s[:-1]) * mult[s[-1]])
     return int(s)
+
+def audit(root, _depth=0):
+    """walk root; return (total bytes, total files)."""
+    total = 0
+    count = 0
+    try:
+        entries = list(os.scandir(root))
+    except (PermissionError, OSError):
+        return 0, 0
+    for e in entries:
+        try:
+            if e.is_dir(follow_symlinks=False):
+                if e.name in EXCLUDE_DIRS:
+                    continue
+                s, c = audit(e.path, _depth + 1)
+                total += s
+                count += c
+            else:
+                total += e.stat().st_size
+                count += 1
+        except OSError:
+            continue
+    return total, count
