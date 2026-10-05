@@ -6,6 +6,7 @@ test:
 	$(PY) -m unittest discover -s passgen -v
 	$(PY) -m unittest discover -s todo-cli -v
 	$(PY) -m unittest discover -s weather-cli -v
+	$(PY) -m unittest discover -s disk-audit -v
 
 run-passgen:
 	$(PY) passgen/passgen.py

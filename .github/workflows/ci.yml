@@ -22,3 +22,4 @@ jobs:
           python -m unittest discover -s passgen
           python -m unittest discover -s todo-cli
           python -m unittest discover -s weather-cli
+          python -m unittest discover -s disk-audit
