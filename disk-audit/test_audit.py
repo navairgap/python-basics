@@ -27,6 +27,22 @@ class TestAudit(unittest.TestCase):
         self.assertEqual(sizes["deep"], 400)
         self.assertEqual(sizes["sub"], 600)
 
+    def test_min_size_filter(self):
+        stats, _, _ = audit(self.root, min_size=500)
+        self.assertEqual([s.path for s in stats], [f"{self.root}/sub"])
+
+    def test_exclude(self):
+        _, total, count = audit(self.root, exclude={"sub"})
+        self.assertEqual((total, count), (100, 1))
+
+    def test_symlink_skipped(self):
+        try:
+            os.symlink(f"{self.root}/sub", f"{self.root}/link")
+        except OSError:
+            self.skipTest("no symlink support")
+        _, _, count = audit(self.root)
+        self.assertEqual(count, 3)
+
 
 if __name__ == "__main__":
     unittest.main()
