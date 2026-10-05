@@ -8,3 +8,9 @@ import sys
 from dataclasses import dataclass, field
 
 EXCLUDE_DIRS = {".git", "node_modules", "__pycache__", ".cache"}
+
+@dataclass
+class DirStat:
+    path: str
+    size: int = 0
+    files: int = 0
