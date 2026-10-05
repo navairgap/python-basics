@@ -70,9 +70,12 @@ def main():
     ap = argparse.ArgumentParser(prog="disk-audit", description="find what's eating your disk")
     ap.add_argument("path", nargs="?", default=".")
     ap.add_argument("-n", "--top", type=int, default=15, help="show top N directories")
+    ap.add_argument("--exclude", action="append", default=[], help="dir names to skip (repeatable)")
+    ap.add_argument("--min-size", default="0", help="e.g. 100M, 2G")
     a = ap.parse_args()
 
-    stats, total, count = audit(a.path)
+    min_bytes = parse_size(a.min_size)
+    stats, total, count = audit(a.path, set(a.exclude), min_bytes)
     stats.sort(key=lambda s: s.size, reverse=True)
     rows = stats[: a.top]
     print(f"scanned {count} files · total {format_size(total)}\n")
