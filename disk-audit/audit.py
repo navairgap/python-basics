@@ -14,3 +14,9 @@ class DirStat:
     path: str
     size: int = 0
     files: int = 0
+
+def format_size(n):
+    for unit in ["B", "K", "M", "G", "T"]:
+        if n < 1024 or unit == "T":
+            return f"{n}B" if unit == "B" else f"{n:.1f}{unit}"
+        n /= 1024
