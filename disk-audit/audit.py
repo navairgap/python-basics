@@ -20,3 +20,10 @@ def format_size(n):
         if n < 1024 or unit == "T":
             return f"{n}B" if unit == "B" else f"{n:.1f}{unit}"
         n /= 1024
+
+def parse_size(s):
+    mult = {"B": 1, "K": 1024, "M": 1024 ** 2, "G": 1024 ** 3, "T": 1024 ** 4}
+    s = s.upper().strip()
+    if s[-1:] in mult:
+        return int(float(s[:-1]) * mult[s[-1]])
+    return int(s)
