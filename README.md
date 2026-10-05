@@ -10,6 +10,7 @@ that rot. learning in public.
 | `passgen/`    | password generator (secrets)   | `python3 passgen/passgen.py`   |
 | `todo-cli/`   | json-backed todo list          | `python3 todo-cli/todo.py ls`  |
 | `weather-cli/`| weather via wttr.in            | `python3 weather-cli/weather.py pune` |
+| `disk-audit/` | disk usage analyzer           | `python3 disk-audit/audit.py ~/Downloads` |
 
 ## rules i hold myself to
 
