@@ -72,12 +72,22 @@ def main():
     ap.add_argument("-n", "--top", type=int, default=15, help="show top N directories")
     ap.add_argument("--exclude", action="append", default=[], help="dir names to skip (repeatable)")
     ap.add_argument("--min-size", default="0", help="e.g. 100M, 2G")
+    ap.add_argument("--json", action="store_true", help="machine-readable output")
     a = ap.parse_args()
 
     min_bytes = parse_size(a.min_size)
     stats, total, count = audit(a.path, set(a.exclude), min_bytes)
     stats.sort(key=lambda s: s.size, reverse=True)
     rows = stats[: a.top]
+
+    if a.json:
+        print(json.dumps({
+            "total": total,
+            "files": count,
+            "dirs": [{"path": s.path, "size": s.size, "files": s.files} for s in rows],
+        }, indent=2))
+        return
+
     print(f"scanned {count} files · total {format_size(total)}\n")
     for line in render_bars(rows):
         print(line)
