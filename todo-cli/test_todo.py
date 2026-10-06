@@ -54,3 +54,13 @@ class TestTodo(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPriorityField(unittest.TestCase):
+    def test_new_items_have_priority(self):
+        todo.add("check field")
+        self.assertEqual(todo.load()[0].get("priority"), "normal")
+
+
+if __name__ == "__main__":
+    unittest.main()
