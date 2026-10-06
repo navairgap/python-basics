@@ -1,4 +1,4 @@
-# python-basics
+# python-projects
 
 small python projects. stdlib only — no pip, no venv drama, no dependencies
 that rot. learning in public.
