@@ -50,3 +50,21 @@ class TestWeather(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDefaultCity(unittest.TestCase):
+    def test_env_override(self):
+        import os
+        from unittest.mock import patch
+        with patch.dict(os.environ, {"WEATHER_CITY": "pune"}):
+            self.assertEqual(weather.default_city(), "pune")
+
+    def test_empty_by_default(self):
+        import os
+        from unittest.mock import patch
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertEqual(weather.default_city(), "")
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -41,9 +41,15 @@ def render(info, as_json=False):
         print(f"humidity {info['humidity']}%  ·  wind {info['wind_kmph']} km/h")
 
 
+def default_city():
+    """WEATHER_CITY env override, else empty (auto-ip)."""
+    import os
+    return os.environ.get("WEATHER_CITY", "")
+
+
 def main():
     ap = argparse.ArgumentParser(description="current weather via wttr.in")
-    ap.add_argument("place", nargs="?", default="", help="city (default: auto-ip)")
+    ap.add_argument("place", nargs="?", default=default_city(), help="city (default: auto-ip or $WEATHER_CITY)")
     ap.add_argument("--json", action="store_true", help="raw summary as json")
     a = ap.parse_args()
     try:
