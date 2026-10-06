@@ -15,3 +15,5 @@ state lives in `todo.json` next to the script. it's json — diff it, back it
 up, whatever. not cloud, not a startup, just a file.
 
 run tests: `python3 -m unittest discover -s . -v`
+
+items carry a `priority` field (default `normal`) in `todo.json` — set it by editing the file for now; cli support is on the roadmap.
