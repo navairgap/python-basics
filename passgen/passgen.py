@@ -57,6 +57,18 @@ def strength(password, no_ambiguous=False):
     return {"bits": round(bits, 1), "rating": rating}
 
 
+WORDS = ("amber binary cobalt delta ember frost glacier harbor ivory jasper "
+         "krypton lunar meadow north orbit prism quartz riverstone solar timber "
+         "umbra velvet willow xenon yellow zenith anchor beacon cipher drift "
+         "engine fossil garnet hollow island jolt kernel lantern marble nova "
+         "onyx pulse quiver relay summit turbine umber vortex window yield zephyr").split()
+
+
+def passphrase(words=5, separator="-"):
+    import secrets as _s
+    return separator.join(_s.choice(WORDS) for _ in range(words))
+
+
 def main():
     ap = argparse.ArgumentParser(description="generate passwords")
     ap.add_argument("-l", "--length", type=int, default=16)
@@ -66,6 +78,11 @@ def main():
     ap.add_argument("--no-digits", action="store_true")
     ap.add_argument("--no-symbols", action="store_true")
     a = ap.parse_args()
+    if a.passphrase:
+        for _ in range(a.count):
+            print(passphrase(a.words))
+        return
+
     try:
         for pwd in generate(a.length, not a.no_lower, not a.no_upper,
                             not a.no_digits, not a.no_symbols, a.count,
