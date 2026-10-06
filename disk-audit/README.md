@@ -18,3 +18,5 @@ python3 disk-audit/audit.py ~ --exclude node_modules --json
 skips `.git`, `node_modules`, `__pycache__`, `.cache` by default; override with `--exclude`.
 
 run tests: `python3 -m unittest discover -s disk-audit -v`
+
+`--csv out.csv` writes the top-N rows to a csv file (path,size_bytes,files) for spreadsheets and further tooling.
