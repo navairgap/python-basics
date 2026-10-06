@@ -17,3 +17,12 @@ def check_port(host, port, timeout=DEFAULT_TIMEOUT):
             return True, round((time.perf_counter() - start) * 1000, 1)
     except OSError:
         return False, None
+
+def dns_time(host):
+    """resolve a host, return ms or None."""
+    start = time.perf_counter()
+    try:
+        socket.getaddrinfo(host, None)
+        return round((time.perf_counter() - start) * 1000, 1)
+    except OSError:
+        return None
