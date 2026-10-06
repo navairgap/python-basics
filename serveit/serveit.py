@@ -13,3 +13,25 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, fmt, *args):
         if not QUIET:
             super().log_message(fmt, *args)
+
+def main():
+    global QUIET
+    ap = argparse.ArgumentParser(prog="serveit", description="serve a directory over http")
+    ap.add_argument("directory", nargs="?", default=".")
+    ap.add_argument("-p", "--port", type=int, default=8000)
+    ap.add_argument("-b", "--bind", default="127.0.0.1")
+    ap.add_argument("-q", "--quiet", action="store_true")
+    a = ap.parse_args()
+    QUIET = a.quiet
+
+    handler = functools.partial(Handler, directory=os.path.abspath(a.directory))
+    with http.server.ThreadingHTTPServer((a.bind, a.port), handler) as srv:
+        print(f"serving {a.directory} at http://{a.bind}:{a.port} (ctrl+c to stop)", file=sys.stderr)
+        try:
+            srv.serve_forever()
+        except KeyboardInterrupt:
+            pass
+
+
+if __name__ == "__main__":
+    main()
