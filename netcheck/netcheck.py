@@ -26,3 +26,14 @@ def dns_time(host):
         return round((time.perf_counter() - start) * 1000, 1)
     except OSError:
         return None
+
+def http_status(url, timeout=DEFAULT_TIMEOUT):
+    """HEAD a url, return status code or None."""
+    try:
+        req = urllib.request.Request(url, method="HEAD")
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        return e.code
+    except OSError:
+        return None
