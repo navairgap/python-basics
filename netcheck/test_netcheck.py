@@ -32,5 +32,14 @@ class TestDns(unittest.TestCase):
         with patch.object(socket, "getaddrinfo", side_effect=socket.gaierror):
             self.assertIsNone(netcheck.dns_time("nope.invalid"))
 
+
+class TestHttp(unittest.TestCase):
+    def test_404_is_a_valid_answer(self):
+        from urllib.error import HTTPError
+        with patch.object(netcheck.urllib.request, "urlopen",
+                          side_effect=HTTPError("u", 404, "nf", {}, None)):
+            self.assertEqual(netcheck.http_status("http://x/"), 404)
+
+
 if __name__ == "__main__":
     unittest.main()
