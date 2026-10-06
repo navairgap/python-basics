@@ -1,0 +1,36 @@
+import socket
+import unittest
+from unittest.mock import patch
+
+import netcheck
+
+
+class FakeConn:
+    def __enter__(self): return self
+    def __exit__(self, *a): return False
+
+
+class TestPort(unittest.TestCase):
+    def test_open_port(self):
+        with patch.object(socket, "create_connection", return_value=FakeConn()):
+            ok, ms = netcheck.check_port("example.com", 443)
+        self.assertTrue(ok)
+        self.assertIsNotNone(ms)
+
+    def test_closed_port(self):
+        with patch.object(socket, "create_connection", side_effect=OSError("refused")):
+            ok, ms = netcheck.check_port("example.com", 1)
+        self.assertFalse(ok)
+        self.assertIsNone(ms)
+
+
+class TestDns(unittest.TestCase):
+    def test_resolves(self):
+        self.assertIsNotNone(netcheck.dns_time("localhost"))
+
+    def test_nxdomain(self):
+        with patch.object(socket, "getaddrinfo", side_effect=socket.gaierror):
+            self.assertIsNone(netcheck.dns_time("nope.invalid"))
+
+if __name__ == "__main__":
+    unittest.main()
