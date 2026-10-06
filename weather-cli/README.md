@@ -12,3 +12,5 @@ python3 weather.py pune --json
 honest error messages when the network's down or the place name is garbage.
 
 run tests: `python3 -m unittest discover -s . -v`
+
+set `WEATHER_CITY=pune` in your environment to skip typing the city every run.
