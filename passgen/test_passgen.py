@@ -74,3 +74,19 @@ class TestStrength(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPassphrase(unittest.TestCase):
+    def test_shape(self):
+        from passgen import passphrase
+        pp = passphrase(4)
+        self.assertEqual(len(pp.split("-")), 4)
+        self.assertTrue(all(w.isalpha() for w in pp.split("-")))
+
+    def test_custom_separator(self):
+        from passgen import passphrase
+        self.assertIn(" ", passphrase(3, separator=" "))
+
+
+if __name__ == "__main__":
+    unittest.main()
