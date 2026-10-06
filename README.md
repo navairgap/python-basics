@@ -11,6 +11,8 @@ that rot. learning in public.
 | `todo-cli/`   | json-backed todo list          | `python3 todo-cli/todo.py ls`  |
 | `weather-cli/`| weather via wttr.in            | `python3 weather-cli/weather.py pune` |
 | `disk-audit/` | disk usage analyzer           | `python3 disk-audit/audit.py ~/Downloads` |
+| `netcheck/`   | network diagnostics           | `python3 netcheck/netcheck.py port example.com 443` |
+| `serveit/`    | static file server            | `python3 serveit/serveit.py ~/share` |
 
 ## rules i hold myself to
 
