@@ -63,3 +63,20 @@ class TestFormat(unittest.TestCase):
         lines = render_bars(rows, width=10)
         self.assertEqual(len(lines), 2)
         self.assertIn("/a", lines[0])
+
+
+class TestCsv(unittest.TestCase):
+    def test_csv_export(self):
+        import csv, io
+        from audit import DirStat
+        buf = io.StringIO()
+        w = csv.writer(buf)
+        w.writerow(["path", "size_bytes", "files"])
+        w.writerow(["/x", 10, 1])
+        buf.seek(0)
+        rows = list(csv.reader(buf))
+        self.assertEqual(rows[1], ["/x", "10", "1"])
+
+
+if __name__ == "__main__":
+    unittest.main()

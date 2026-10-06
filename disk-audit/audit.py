@@ -2,6 +2,7 @@
 """disk-audit - find what's eating your disk. stdlib only."""
 
 import argparse
+import csv
 import json
 import os
 import sys
@@ -73,12 +74,21 @@ def main():
     ap.add_argument("--exclude", action="append", default=[], help="dir names to skip (repeatable)")
     ap.add_argument("--min-size", default="0", help="e.g. 100M, 2G")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
+    ap.add_argument("--csv", metavar="FILE", help="write results to a csv file")
     a = ap.parse_args()
 
     min_bytes = parse_size(a.min_size)
     stats, total, count = audit(a.path, set(a.exclude), min_bytes)
     stats.sort(key=lambda s: s.size, reverse=True)
     rows = stats[: a.top]
+
+    if a.csv:
+        with open(a.csv, "w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["path", "size_bytes", "files"])
+            for s in rows:
+                w.writerow([s.path, s.size, s.files])
+        print(f"wrote {a.csv}")
 
     if a.json:
         print(json.dumps({
