@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 todo-cli/todo.json
 .coverage
+netcheck/__pycache__/
+serveit/__pycache__/
