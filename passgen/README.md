@@ -12,3 +12,7 @@ uses `secrets`, guarantees at least one character from every selected set,
 shuffles so the first chars aren't predictable.
 
 run tests: `python3 -m unittest discover -s . -v`
+
+## passphrases
+
+`--passphrase --words 6` generates word-based passwords (`--count` works too). Words come from a fixed built-in list — no dictionary file needed.
