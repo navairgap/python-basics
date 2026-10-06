@@ -24,3 +24,4 @@ jobs:
           python -m unittest discover -s weather-cli
           python -m unittest discover -s disk-audit
           python -m unittest discover -s netcheck
+          python -m unittest discover -s serveit
