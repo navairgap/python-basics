@@ -48,3 +48,34 @@ def local_ip():
         return "127.0.0.1"
     finally:
         s.close()
+
+def main():
+    ap = argparse.ArgumentParser(prog="netcheck", description="small network diagnostics")
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("port"); p.add_argument("host"); p.add_argument("port", type=int)
+    p = sub.add_parser("dns"); p.add_argument("host")
+    p = sub.add_parser("http"); p.add_argument("url")
+    sub.add_parser("ip")
+    a = ap.parse_args()
+
+    if a.cmd == "port":
+        ok, ms = check_port(a.host, a.port)
+        if ok:
+            print(f"{a.host}:{a.port} open ({ms}ms)")
+        else:
+            print(f"{a.host}:{a.port} closed or filtered")
+
+    elif a.cmd == "dns":
+        ms = dns_time(a.host)
+        print(f"{a.host} resolves in {ms}ms" if ms is not None else f"{a.host} does not resolve")
+
+    elif a.cmd == "http":
+        code = http_status(a.url)
+        print(f"{a.url} -> {code}" if code else f"{a.url} unreachable")
+
+    elif a.cmd == "ip":
+        print(local_ip())
+
+
+if __name__ == "__main__":
+    main()
