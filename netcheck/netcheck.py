@@ -64,15 +64,15 @@ def main():
             print(f"{a.host}:{a.port} open ({ms}ms)")
         else:
             print(f"{a.host}:{a.port} closed or filtered")
-
+            sys.exit(1)
     elif a.cmd == "dns":
         ms = dns_time(a.host)
         print(f"{a.host} resolves in {ms}ms" if ms is not None else f"{a.host} does not resolve")
-
+        sys.exit(0 if ms is not None else 1)
     elif a.cmd == "http":
         code = http_status(a.url)
         print(f"{a.url} -> {code}" if code else f"{a.url} unreachable")
-
+        sys.exit(0 if code else 1)
     elif a.cmd == "ip":
         print(local_ip())
 
