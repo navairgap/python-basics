@@ -57,6 +57,21 @@ if __name__ == "__main__":
 
 
 class TestPriorityField(unittest.TestCase):
+    def setUp(self):
+        import tempfile
+        from pathlib import Path
+        self.tmp = tempfile.TemporaryDirectory()
+        self.store = Path(self.tmp.name) / "todo.json"
+        self.old = todo.STORE
+        todo.STORE = self.store
+        self.addCleanup(self.tmp.cleanup)
+        self.addCleanup(setattr, todo, "STORE", self.old)
+
+    def test_legacy_items_backfilled(self):
+        import json as _json
+        self.store.write_text(_json.dumps([{"task": "old", "done": False}]))
+        self.assertEqual(todo.load()[0]["priority"], "normal")
+
     def test_new_items_have_priority(self):
         todo.add("check field")
         self.assertEqual(todo.load()[0].get("priority"), "normal")
