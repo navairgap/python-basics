@@ -1,33 +1,57 @@
 # python-projects
 
-small python projects. stdlib only — no pip, no venv drama, no dependencies
-that rot. learning in public.
+![CI](https://github.com/navairgap/python-projects/actions/workflows/ci.yml/badge.svg)
+![python](https://img.shields.io/badge/python-3.9%2B-blue)
+![deps](https://img.shields.io/badge/dependencies-none-success)
 
-## projects
+Small, complete command-line projects in pure Python. **Standard library only —
+zero pip installs, zero venv setup.** Each one is real enough to be useful and
+small enough to read in one sitting. Learning in public, done properly.
 
-| dir          | what                          | run it                        |
-| ------------ | ----------------------------- | ----------------------------- |
-| `passgen/`    | password generator (secrets)   | `python3 passgen/passgen.py`   |
-| `todo-cli/`   | json-backed todo list          | `python3 todo-cli/todo.py ls`  |
-| `weather-cli/`| weather via wttr.in            | `python3 weather-cli/weather.py pune` |
-| `disk-audit/` | disk usage analyzer           | `python3 disk-audit/audit.py ~/Downloads` |
-| `netcheck/`   | network diagnostics           | `python3 netcheck/netcheck.py port example.com 443` |
-| `serveit/`    | static file server            | `python3 serveit/serveit.py ~/share` |
+## Requirements
 
-## rules i hold myself to
+- Python 3.9 or newer (`python3 --version`)
+- that's the whole list
 
-- standard library only, python 3.9+
-- every project has tests (`python3 -m unittest discover -s .`) and they pass
-- every project has a readme that fits in one screen
-- small is the point. boring is a feature.
+## Projects
 
----
-maintained · verified 2026-09-30
----
-maintained · verified 2026-10-01
----
-maintained · verified 2026-10-02
+| project | what it does | try it |
+| --- | --- | --- |
+| [passgen](passgen/) | password generator with entropy scoring | `python3 passgen/passgen.py -l 24 -v` |
+| [todo-cli](todo-cli/) | json-backed todo list with stats | `python3 todo-cli/todo.py add "ship it"` |
+| [weather-cli](weather-cli/) | current conditions via wttr.in | `python3 weather-cli/weather.py pune` |
+| [disk-audit](disk-audit/) | find what's eating your disk | `python3 disk-audit/audit.py ~/Downloads` |
+| [netcheck](netcheck/) | port / dns / http diagnostics | `python3 netcheck/netcheck.py port example.com 443` |
+| [serveit](serveit/) | static file server, one command | `python3 serveit/serveit.py ~/share` |
 
-## Why stdlib only
+Every project has tests. Every project has a README that fits on one screen.
 
-Every project here runs on a fresh Python install with zero pip installs. It's a constraint on purpose: when you can't reach for a dependency, you learn what the standard library already does well — `secrets`, `json`, `urllib`, `argparse`.
+## Running the tests
+
+```bash
+make test        # all six suites
+# or individually:
+python3 -m unittest discover -s passgen
+python3 -m unittest discover -s todo-cli
+python3 -m unittest discover -s weather-cli
+python3 -m unittest discover -s disk-audit
+python3 -m unittest discover -s netcheck
+python3 -m unittest discover -s serveit
+```
+
+CI runs the same suites on Python 3.9 through 3.12 on every push.
+
+## House rules
+
+- **stdlib only.** If it needs `pip`, it doesn't belong here.
+- **every project ships with tests that pass** — enforced by CI.
+- **readmes tell the truth.** No roadmap theater, no feature fiction.
+- **small is the point.** Each project is one file of logic plus its tests.
+
+## Contributing
+
+Issues and PRs welcome. Keep it dependency-free, keep it tested, keep it honest.
+
+## License
+
+MIT (see [LICENSE](LICENSE))
