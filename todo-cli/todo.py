@@ -12,7 +12,10 @@ STORE = Path(__file__).with_name("todo.json")
 
 def load():
     if STORE.exists():
-        return json.loads(STORE.read_text())
+        items = json.loads(STORE.read_text())
+        for it in items:
+            it.setdefault("priority", "normal")
+        return items
     return []
 
 
