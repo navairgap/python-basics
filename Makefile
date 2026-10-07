@@ -18,3 +18,9 @@ run-todo:
 
 run-weather:
 	$(PY) weather-cli/weather.py
+
+run-netcheck:
+	$(PY) netcheck/netcheck.py ip
+
+run-serveit:
+	$(PY) serveit/serveit.py
