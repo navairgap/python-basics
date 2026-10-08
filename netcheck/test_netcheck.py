@@ -43,3 +43,23 @@ class TestHttp(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class FakeConn:
+    def __enter__(self): return self
+    def __exit__(self, *a): return False
+
+
+class TestTimeout(unittest.TestCase):
+    def test_timeout_forwarded(self):
+        seen = {}
+        def fake(addr, timeout=3):
+            seen["timeout"] = timeout
+            return FakeConn()
+        with patch.object(socket, "create_connection", side_effect=fake):
+            ok, _ = netcheck.check_port("h", 80, timeout=0.5)
+        self.assertTrue(ok)
+        self.assertEqual(seen["timeout"], 0.5)
+
+
+if __name__ == "__main__":
+    unittest.main()
