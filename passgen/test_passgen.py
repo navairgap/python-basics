@@ -90,3 +90,44 @@ class TestPassphrase(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestExcludeChars(unittest.TestCase):
+    def test_excluded_chars_absent(self):
+        pwd = generate(length=40, exclude_chars="aeiou")[0]
+        self.assertFalse(set(pwd) & set("aeiou"))
+
+    def test_full_exclusion_rejected(self):
+        with self.assertRaises(ValueError):
+            generate(length=16, lower=False, upper=False, digits=True,
+                     symbols=False, exclude_chars="0123456789")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+class TestMainSmoke(unittest.TestCase):
+    def test_main_runs_with_flags(self):
+        import subprocess
+        import sys
+        import os
+        out = subprocess.run(
+            [sys.executable, os.path.join(os.path.dirname(__file__), "passgen.py"),
+             "-l", "16", "-n", "1", "--no-ambiguous", "--exclude", "xyz"],
+            capture_output=True, text=True)
+        self.assertEqual(out.returncode, 0, out.stderr)
+        self.assertEqual(len(out.stdout.strip()), 16)
+
+    def test_passphrase_flag(self):
+        import subprocess
+        import sys
+        import os
+        out = subprocess.run(
+            [sys.executable, os.path.join(os.path.dirname(__file__), "passgen.py"),
+             "--passphrase", "--words", "3"],
+            capture_output=True, text=True)
+        self.assertEqual(out.returncode, 0, out.stderr)
+        self.assertEqual(len(out.stdout.strip().split("-")), 3)
+
+
+if __name__ == "__main__":
+    unittest.main()
