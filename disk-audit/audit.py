@@ -75,6 +75,7 @@ def main():
     ap.add_argument("--min-size", default="0", help="e.g. 100M, 2G")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
     ap.add_argument("--csv", metavar="FILE", help="write results to a csv file")
+    ap.add_argument("--totals-only", action="store_true", help="skip the per-directory chart")
     a = ap.parse_args()
 
     min_bytes = parse_size(a.min_size)
@@ -98,7 +99,10 @@ def main():
         }, indent=2))
         return
 
-    print(f"scanned {count} files · total {format_size(total)}\n")
+    print(f"scanned {count} files · total {format_size(total)}")
+    if a.totals_only:
+        return
+    print()
     for line in render_bars(rows):
         print(line)
 
