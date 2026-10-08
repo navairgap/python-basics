@@ -80,3 +80,24 @@ class TestCsv(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestTotalsOnly(unittest.TestCase):
+    def test_no_chart_when_totals_only(self):
+        import subprocess
+        import sys
+        import tempfile
+        import os
+        with tempfile.TemporaryDirectory() as d:
+            with open(f"{d}/f.bin", "wb") as f:
+                f.write(b"x" * 10)
+            out = subprocess.run(
+                [sys.executable, os.path.join(os.path.dirname(__file__), "audit.py"),
+                 d, "--totals-only", "-n", "5"],
+                capture_output=True, text=True)
+            self.assertEqual(out.returncode, 0)
+            self.assertIn("scanned 1 files", out.stdout)
+            self.assertNotIn("\u2588", out.stdout)
+
+
+if __name__ == "__main__":
+    unittest.main()
