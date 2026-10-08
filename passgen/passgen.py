@@ -17,7 +17,7 @@ AMBIGUOUS = set("l1IO0")
 
 
 def generate(length=16, lower=True, upper=True, digits=True, symbols=True, count=1,
-             no_ambiguous=False):
+             no_ambiguous=False, exclude_chars=""):
     pools = [chars for chars, on in (
         (SETS["lower"], lower), (SETS["upper"], upper),
         (SETS["digits"], digits), (SETS["symbols"], symbols),
@@ -28,12 +28,12 @@ def generate(length=16, lower=True, upper=True, digits=True, symbols=True, count
         raise ValueError(f"length {length} too short for {len(pools)} character sets")
 
     alphabet = "".join(pools)
-    if no_ambiguous:
-        pools = ["".join(c for c in pool if c not in AMBIGUOUS) for pool in pools]
-        pools = [pool for pool in pools if pool]
-        if not pools:
-            raise ValueError("no characters left after removing ambiguous ones")
-        alphabet = "".join(pools)
+    for excl in (AMBIGUOUS if no_ambiguous else set()) | set(exclude_chars):
+        pools = ["".join(c for c in pool if c != excl) for pool in pools]
+    pools = [pool for pool in pools if pool]
+    if not pools:
+        raise ValueError("no characters left after exclusions")
+    alphabet = "".join(pools)
     rng = secrets.SystemRandom()
     out = []
     for _ in range(count):
@@ -77,7 +77,13 @@ def main():
     ap.add_argument("--no-upper", action="store_true")
     ap.add_argument("--no-digits", action="store_true")
     ap.add_argument("--no-symbols", action="store_true")
+    ap.add_argument("--no-ambiguous", action="store_true", help="drop lookalikes (l 1 I O 0)")
+    ap.add_argument("--exclude", default="", help="characters to never use")
+    ap.add_argument("-v", "--show-strength", action="store_true", help="print entropy rating")
+    ap.add_argument("--passphrase", action="store_true", help="word-based passphrase instead")
+    ap.add_argument("--words", type=int, default=5)
     a = ap.parse_args()
+
     if a.passphrase:
         for _ in range(a.count):
             print(passphrase(a.words))
@@ -86,7 +92,7 @@ def main():
     try:
         for pwd in generate(a.length, not a.no_lower, not a.no_upper,
                             not a.no_digits, not a.no_symbols, a.count,
-                            a.no_ambiguous):
+                            a.no_ambiguous, a.exclude):
             if a.show_strength:
                 s = strength(pwd, a.no_ambiguous)
                 print(f"{pwd}   # {s['bits']} bits, {s['rating']}")
