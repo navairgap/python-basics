@@ -52,18 +52,23 @@ def local_ip():
 def main():
     ap = argparse.ArgumentParser(prog="netcheck", description="small network diagnostics")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("port"); p.add_argument("host"); p.add_argument("port", type=int)
+    p = sub.add_parser("port"); p.add_argument("host"); p.add_argument("port", type=int, nargs="+")
     p = sub.add_parser("dns"); p.add_argument("host")
     p = sub.add_parser("http"); p.add_argument("url")
     sub.add_parser("ip")
+    ap.add_argument("-t", "--timeout", type=float, default=DEFAULT_TIMEOUT)
     a = ap.parse_args()
 
     if a.cmd == "port":
-        ok, ms = check_port(a.host, a.port)
-        if ok:
-            print(f"{a.host}:{a.port} open ({ms}ms)")
-        else:
-            print(f"{a.host}:{a.port} closed or filtered")
+        all_ok = True
+        for port in a.port:
+            ok, ms = check_port(a.host, port, timeout=a.timeout)
+            if ok:
+                print(f"{a.host}:{port} open ({ms}ms)")
+            else:
+                print(f"{a.host}:{port} closed or filtered")
+                all_ok = False
+        if not all_ok:
             sys.exit(1)
     elif a.cmd == "dns":
         ms = dns_time(a.host)
