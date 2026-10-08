@@ -47,6 +47,12 @@ def done(n, value=True):
     save(items)
 
 
+def pri(n, value):
+    items = load()
+    items[n - 1]["priority"] = value
+    save(items)
+
+
 def stats():
     items = load()
     done = sum(1 for it in items if it["done"])
@@ -70,6 +76,9 @@ def main():
     for name in ("done", "undone", "rm"):
         sub.add_parser(name).add_argument("n", type=int)
     sub.add_parser("stats")
+    p_pri = sub.add_parser("pri")
+    p_pri.add_argument("n", type=int)
+    p_pri.add_argument("priority", choices=["high", "normal", "low"])
     a = ap.parse_args()
 
     if a.cmd == "add":
@@ -78,6 +87,11 @@ def main():
         ls(a.all)
     elif a.cmd in ("done", "undone"):
         done(a.n, a.cmd == "done")
+    elif a.cmd == "pri":
+        try:
+            pri(a.n, a.priority)
+        except IndexError:
+            sys.exit(f"no item #{a.n}")
     elif a.cmd == "stats":
         total, done = stats()
         print(f"{done}/{total} done")
