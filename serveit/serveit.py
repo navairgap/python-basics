@@ -10,9 +10,17 @@ import sys
 QUIET = False
 
 class Handler(http.server.SimpleHTTPRequestHandler):
+    allow_listing = True
+
     def log_message(self, fmt, *args):
         if not QUIET:
             super().log_message(fmt, *args)
+
+    def list_directory(self, path):
+        if not self.allow_listing:
+            self.send_error(404, "listing disabled")
+            return None
+        return super().list_directory(path)
 
 def main():
     global QUIET
@@ -21,8 +29,10 @@ def main():
     ap.add_argument("-p", "--port", type=int, default=8000)
     ap.add_argument("-b", "--bind", default="127.0.0.1")
     ap.add_argument("-q", "--quiet", action="store_true")
+    ap.add_argument("--no-listing", action="store_true", help="404 instead of directory listings")
     a = ap.parse_args()
     QUIET = a.quiet
+    Handler.allow_listing = not a.no_listing
 
     handler = functools.partial(Handler, directory=os.path.abspath(a.directory))
     with http.server.ThreadingHTTPServer((a.bind, a.port), handler) as srv:
