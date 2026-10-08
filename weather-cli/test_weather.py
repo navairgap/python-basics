@@ -68,3 +68,16 @@ class TestDefaultCity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestUnits(unittest.TestCase):
+    def test_units_flag_in_url(self):
+        from unittest.mock import patch
+        import weather
+        with patch.object(weather.urllib.request, "urlopen") as m:
+            m.return_value.__enter__.return_value.read.return_value = b"{}"
+            weather.fetch("pune", units="u")
+        self.assertIn("format=j1u", m.call_args.args[0])
+
+
+if __name__ == "__main__":
+    unittest.main()
