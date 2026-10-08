@@ -8,11 +8,12 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-BASE = "https://wttr.in/{place}?format=j1"
+BASE = "https://wttr.in/{place}?format=j1{unit}"
 
 
-def fetch(place):
-    url = BASE.format(place=urllib.parse.quote(place))
+def fetch(place, units="m"):
+    flag = "" if units == "m" else "u"
+    url = BASE.format(place=urllib.parse.quote(place), unit=flag)
     with urllib.request.urlopen(url, timeout=8) as r:
         return json.loads(r.read().decode())
 
@@ -51,9 +52,10 @@ def main():
     ap = argparse.ArgumentParser(description="current weather via wttr.in")
     ap.add_argument("place", nargs="?", default=default_city(), help="city (default: auto-ip or $WEATHER_CITY)")
     ap.add_argument("--json", action="store_true", help="raw summary as json")
+    ap.add_argument("--units", choices=["m", "u"], default="m", help="m=metric, u=uscs")
     a = ap.parse_args()
     try:
-        render(summarise(fetch(a.place)), a.json)
+        render(summarise(fetch(a.place, a.units)), a.json)
     except urllib.error.URLError:
         sys.exit("couldn't reach wttr.in — check your connection and try again")
     except (KeyError, IndexError):
