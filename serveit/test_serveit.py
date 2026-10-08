@@ -41,3 +41,22 @@ class TestServe(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class TestNoListing(unittest.TestCase):
+    def test_directory_listing_disabled(self):
+        import tempfile
+        serveit.Handler.allow_listing = False
+        try:
+            with tempfile.TemporaryDirectory() as d:
+                srv = serve_dir(d, 0)
+                port = srv.server_address[1]
+                with self.assertRaises(urllib.error.HTTPError) as ctx:
+                    urllib.request.urlopen(f"http://127.0.0.1:{port}/")
+                self.assertEqual(ctx.exception.code, 404)
+                srv.shutdown()
+        finally:
+            serveit.Handler.allow_listing = True
+
+
+if __name__ == "__main__":
+    unittest.main()
