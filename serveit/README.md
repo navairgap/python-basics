@@ -11,3 +11,8 @@ python3 serveit/serveit.py . -p 9000 -b 0.0.0.0 -q
 `-b 0.0.0.0` only on networks you trust.
 
 run tests: `python3 -m unittest discover -s serveit -v`
+
+
+## disabling listings
+
+`--no-listing` returns 404 for directory requests while files still serve fine. Use it when sharing folders whose names you'd rather not advertise.
