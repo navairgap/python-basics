@@ -17,3 +17,8 @@ up, whatever. not cloud, not a startup, just a file.
 run tests: `python3 -m unittest discover -s . -v`
 
 items carry a `priority` field (default `normal`) in `todo.json` — set it by editing the file for now; cli support is on the roadmap.
+
+
+## priorities
+
+`todo.py pri 1 high` sets an item's priority (`high`/`normal`/`low`). The field lives in `todo.json` and survives restarts. Listing by priority is planned; until then `jq` is your friend.
