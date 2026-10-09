@@ -20,3 +20,8 @@ skips `.git`, `node_modules`, `__pycache__`, `.cache` by default; override with 
 run tests: `python3 -m unittest discover -s disk-audit -v`
 
 `--csv out.csv` writes the top-N rows to a csv file (path,size_bytes,files) for spreadsheets and further tooling.
+
+
+## quick totals
+
+`--totals-only` skips the bar chart and prints just the summary line — handy in cron jobs where you only want the headline number.
