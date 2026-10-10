@@ -55,3 +55,7 @@ Issues and PRs welcome. Keep it dependency-free, keep it tested, keep it honest.
 ## License
 
 MIT (see [LICENSE](LICENSE))
+
+## Versioning
+
+no releases — `main` is always green (CI enforces it) and every project is invocable straight from a clone. if that ever changes, this file will say so loudly.
